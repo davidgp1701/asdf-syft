@@ -61,7 +61,7 @@ install() {
 	local -r bin_path="$bin_install_path/syft"
 
 	mkdir -p "$bin_install_path"
-  local tmp_dir; tmp_dir="$(mktemp -d -p "$install_path")"
+  local tmp_dir; tmp_dir="$(mktemp -d)"
 	echo "Downloading syft from $download_url"
 
   # Packaging is different for Linux and Darwin
