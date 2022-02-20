@@ -51,7 +51,7 @@ install() {
 
   local -r platform="$(_get_platform)"
   local -r arch="$(_get_arch)"
-  local -r download_url="$(_get_download_url "$version" "$platform" "$arch" ".zip")"
+  local -r download_url="$(_get_download_url "$version" "$platform" "$arch" ".tar.gz")"
   echo "${download_url}"
 }
 
