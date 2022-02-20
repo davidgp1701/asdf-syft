@@ -51,8 +51,66 @@ install() {
 
   local -r platform="$(_get_platform)"
   local -r arch="$(_get_arch)"
-  local -r download_url="$(_get_download_url "$version" "$platform" "$arch" ".tar.gz")"
-  echo "${download_url}"
+
+  local -r tarball_url="$(_get_download_url "$version" "$platform" "$arch" ".tar.gz")"
+  local -r zip_url="$(_get_download_url "$version" "$platform" "$arch" ".zip")"
+
+  case $platform in
+  linux)
+    install_tarball "$install_path" "$tarball_url"
+    ;;
+  darwin)
+    local -r code=$(curl -o /dev/null --silent -LIw '%{http_code}' "${tarball_url}")
+    if [ "$code" = "200" ]
+    then
+      install_tarball "$install_path" "$tarball_url"
+    else
+      install_zip "$install_path" "$zip_url"
+    fi
+    ;;
+  esac
+}
+
+install_tarball() {
+  local -r install_path=$1
+  local -r url=$2
+
+  local -r tar_install_path="$install_path/syft-v$version.tgz"
+  local -r bin_install_path="$install_path/bin"
+  local -r bin_path="$bin_install_path/syft"
+
+  mkdir -p "$bin_install_path"
+  local tmp_dir
+  tmp_dir="$(mktemp -d)"
+
+  echo "Downloading syft from $url"
+  curl -Ls "$url" -o "$tar_install_path"
+  tar -xf "$tar_install_path" -C "$tmp_dir"
+  cp "${tmp_dir}/syft" "$bin_path"
+  rm -rf "$tar_install_path"
+  rm -rf "$tmp_dir"
+  chmod +x "$bin_path"
+}
+
+install_zip() {
+  local -r install_path=$1
+  local -r url=$2
+
+  local -r zip_install_path="$install_path/syft-v$version.zip"
+  local -r bin_install_path="$install_path/bin"
+  local -r bin_path="$bin_install_path/syft"
+
+  mkdir -p "$bin_install_path"
+  local tmp_dir
+  tmp_dir="$(mktemp -d)"
+
+  echo "Downloading syft from $url"
+  curl -Ls "$url" -o "$zip_install_path"
+  unzip "$zip_install_path" -d "$tmp_dir"
+  cp "${tmp_dir}/syft" "$bin_path"
+  rm -rf "$zip_install_path"
+  rm -rf "$tmp_dir"
+  chmod +x "$bin_path"
 }
 
 install "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"
