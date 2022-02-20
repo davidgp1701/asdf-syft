@@ -38,16 +38,10 @@ _get_download_url() {
   local -r version="$1"
   local -r platform="$2"
   local -r arch="$3"
-  local -r url="https://github.com/anchore/syft/releases/download/v${version}/syft_${version}_${platform}_${arch}"
+  local -r ext="$4"
+  local -r url="https://github.com/anchore/syft/releases/download/v${version}/syft_${version}_${platform}_${arch}${ext}"
 
-  case $platform in
-  linux)
-    echo "${url}.tar.gz"
-    ;;
-  darwin)
-    echo "${url}.zip"
-    ;;
-  esac
+  echo "${url}"
 }
 
 install() {
@@ -56,9 +50,8 @@ install() {
   echo "${version}, ${install_path}"
 
   local -r platform="$(_get_platform)"
-  local arch
-  arch="$(_get_arch)"
-  local -r download_url="$(_get_download_url "$version" "$platform" "$arch")"
+  local -r arch="$(_get_arch)"
+  local -r download_url="$(_get_download_url "$version" "$platform" "$arch" ".zip")"
   echo "${download_url}"
 }
 
