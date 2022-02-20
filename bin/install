@@ -55,6 +55,9 @@ install() {
   local -r install_path=$2
   echo "${version}, ${install_path}"
 
+  local -r platform="$(_get_platform)"
+  local arch
+  arch="$(_get_arch)"
   local -r download_url="$(_get_download_url "$version" "$platform" "$arch")"
   echo "${download_url}"
 }
