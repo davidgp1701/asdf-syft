@@ -47,7 +47,6 @@ _get_download_url() {
 install() {
   local -r version=$1
   local -r install_path=$2
-  echo "${version}, ${install_path}"
 
   local -r platform="$(_get_platform)"
   local -r arch="$(_get_arch)"
