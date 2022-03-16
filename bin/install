@@ -87,11 +87,11 @@ install() {
       tar -xf "${tar_install_path}" -C "${tmp_dir}"
       ;;
     darwin)
-      curl -Ls "$download_url" -o "$zip_install_path"
-
       if [[ "${download_url}" == *zip ]]; then
+        curl -Ls "$download_url" -o "$zip_install_path"
         unzip "${zip_install_path}" -d "${tmp_dir}"
       else
+        curl -Ls "${download_url}" -o "${tar_install_path}"
         tar -xf "${tar_install_path}" -C "${tmp_dir}"
       fi
       ;;
