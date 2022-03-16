@@ -5,10 +5,10 @@ on:
     branches:
       - main
 
-  jobs:
-    release-please:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: GoogleCloudPlatform/release-please-action@v2
-      with:
-        release-type: simple
+jobs:
+  release-please:
+  runs-on: ubuntu-latest
+  steps:
+  - uses: GoogleCloudPlatform/release-please-action@v2
+    with:
+      release-type: simple
