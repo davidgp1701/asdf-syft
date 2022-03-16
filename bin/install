@@ -20,18 +20,18 @@ _get_arch() {
   local arch
   arch=$(uname -m)
   case $arch in
-  # Note: Tool is only provided in AMD64 for the moment
-  # armv*) arch="armv6hf";;
-  # aarch64) arch="aarch64";;
-  x86_64)
-    arch="amd64"
-    ;;
-  arm64)
-    arch="arm64"
-    ;;
-  aarch64)
-    arch="arm64"
-    ;;
+    # Note: Tool is only provided in AMD64 for the moment
+    # armv*) arch="armv6hf";;
+    # aarch64) arch="aarch64";;
+    x86_64)
+      arch="amd64"
+      ;;
+    arm64)
+      arch="arm64"
+      ;;
+    aarch64)
+      arch="arm64"
+      ;;
   esac
   echo "$arch"
 }
@@ -45,14 +45,21 @@ _get_download_url() {
   local -r platform="$2"
   local -r arch="$3"
   local -r url="https://github.com/anchore/syft/releases/download/v${version}/syft_${version}_${platform}_${arch}"
+  local -r checksums_url="https://github.com/anchore/syft/releases/download/v${version}/syft_${version}_checksums.txt"
 
   case $platform in
-  linux)
-    echo "${url}.tar.gz"
-    ;;
-  darwin)
-    echo "${url}.zip"
-    ;;
+    linux)
+      echo "${url}.tar.gz"
+      ;;
+    darwin)
+      local -r darwin_checksum="$(curl -Ls "${checksums_url}" | grep darwin | tail -1)"
+
+      if [[ "${darwin_checksum}" == *zip ]]; then
+        echo "${url}.zip"
+      else
+        echo "${url}.tar.gz"
+      fi
+      ;;
   esac
 }
 
@@ -75,14 +82,14 @@ install() {
 
   # Packaging is different for Linux and Darwin
   case $platform in
-  linux)
-    curl -Ls "$download_url" -o "$tar_install_path"
-    tar -xf "$tar_install_path" -C "$tmp_dir"
-    ;;
-  darwin)
-    curl -Ls "$download_url" -o "$zip_install_path"
-    unzip "$zip_install_path" -d "$tmp_dir"
-    ;;
+    linux)
+      curl -Ls "$download_url" -o "$tar_install_path"
+      tar -xf "$tar_install_path" -C "$tmp_dir"
+      ;;
+    darwin)
+      curl -Ls "$download_url" -o "$zip_install_path"
+      tar -xf "${tar_install_path}" -C "${tmp_dir}" || unzip "$zip_install_path" -d "$tmp_dir"
+      ;;
   esac
 
   cp "${tmp_dir}/syft" "$bin_path"
