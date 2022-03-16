@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.0.1](https://www.github.com/davidgp1701/asdf-syft/compare/v1.0.0...v1.0.1) (2022-03-16)
+
+
+### Bug Fixes
+
+* Consider Mac OS X arm ([#5](https://www.github.com/davidgp1701/asdf-syft/issues/5)) ([1b5e661](https://www.github.com/davidgp1701/asdf-syft/commit/1b5e661e11bdbc16e5d9f4aeb5afe15a22457d59))
+
 ## 1.0.0 (2021-09-15)
 
 
